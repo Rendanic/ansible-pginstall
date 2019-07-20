@@ -1,0 +1,6 @@
+[pgserver]
+localhost
+
+# pq => All PostgreSQL Database Servers + BATMAN-Server
+[pq:children]
+pgserver

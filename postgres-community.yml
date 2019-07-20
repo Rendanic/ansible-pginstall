@@ -1,0 +1,27 @@
+---
+- name: Install PostgreSQL Reposiories
+  hosts: pq
+  roles:
+    - role: pgsqlrepo
+
+- name: PostgreSQL Libraries for geerlingguy.postgresql
+  hosts: localhost
+  tasks:
+    - package:
+        name: python2-psycopg2.x86_64
+        state: present
+      become: yes
+
+- name: Install PostgreSQL Community Edition
+  hosts: pgserver
+  roles:
+    - role: geerlingguy.postgresql
+      become: yes
+    - role: pgBackRest
+      become: yes
+
+#- name: Install BARMAN-Server
+#  hosts: barman
+#  roles:
+#    - role: barman
+#      become: yes
