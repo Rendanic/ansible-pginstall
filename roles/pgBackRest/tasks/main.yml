@@ -56,3 +56,16 @@
 
 - debug: msg="{{ cmdout.stdout_lines }}"
   when: cmdout is defined
+
+# show only warn/error due to spam in logfile
+- name: initial Full-Backup
+  command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=warn --type=full backup
+  args:
+    creates: "/var/log/pgbackrest/db1-backup.log"
+  register: cmdout
+  become_user: "{{postgresql_user}}"
+
+- name: Show warn/errors from initial Full-Backup
+  debug: msg="{{ cmdout.stdout_lines }}"
+  when: cmdout is defined
+
