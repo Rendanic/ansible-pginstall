@@ -1,0 +1,8 @@
+postgresql_databases:
+  - name: example_db
+
+postgresql_users:
+  - name: admin
+    password: pleaseForg3t
+  - name: check_mk
+    password: monitoring
