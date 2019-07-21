@@ -2,6 +2,16 @@
   package:
     name: "pgbackrest"
     state: present
+  tags: pgbackrest
+
+- name: Template pgbackrest.conf
+  template:
+    src: logrotate.conf.j2
+    dest: /etc/logrotate.d/pgbackrest.conf
+    mode: 0644
+    owner: root
+    group: root
+  tags: pgbackrest
 
 - name: Template pgbackrest.conf
   template:
@@ -9,6 +19,7 @@
     dest: /etc/pgbackrest.conf
     owner: root
     group: root
+  tags: pgbackrest
 
 - name: pgbackrest Logfile directory
   file:
@@ -16,7 +27,8 @@
     state: directory
     owner: "{{postgresql_user}}"
     group: "{{postgresql_group}}"
-    mode: 0750
+    mode: o=-rwx
+  tags: pgbackrest
 
 - name: pgbackrest stanze directory
   file:
@@ -25,6 +37,7 @@
     owner: "{{postgresql_user}}"
     group: "{{postgresql_group}}"
     mode: 0750
+  tags: pgbackrest
 
 - name: pgbackrest stanza-create
   command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=info stanza-create
@@ -43,4 +56,3 @@
 
 - debug: msg="{{ cmdout.stdout_lines }}"
   when: cmdout is defined
-

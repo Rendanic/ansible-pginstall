@@ -1,0 +1,10 @@
+/var/log/pgbackrest/* {
+    missingok
+    notifempty
+    maxsize 2048k
+    maxage 90
+    weekly
+    dateext
+    compress
+    create 0640 {{postgresql_user}} {{postgresql_group}}
+}
