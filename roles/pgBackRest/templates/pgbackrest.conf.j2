@@ -2,6 +2,13 @@
 repo1-path={{pgbackrestrepo}}
 repo1-retention-full=2
 
+process-max=2
+archive-async=y
+archive-push-queue-max=100MB
+spool-path={{pgbackrestrepo}}/spool
+
+log-level-console=info
+
 [{{pgbackreststanza}}]
 pg1-path={{postgresql_data_dir}}
 
