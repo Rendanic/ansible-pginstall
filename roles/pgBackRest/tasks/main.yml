@@ -14,16 +14,16 @@
   file:
     path: /var/log/pgbackrest
     state: directory
-    owner: postgres
-    group: postgres
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
     mode: 0750
 
 - name: pgbackrest stanze directory
   file:
     path: "{{pgbackrestrepo}}"
     state: directory
-    owner: postgres
-    group: postgres
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
     mode: 0750
 
 - name: pgbackrest stanza-create
@@ -31,7 +31,7 @@
   args:
     creates: "{{pgbackrestrepo}}/archive"
   register: cmdout
-  become_user: postgres
+  become_user: "{{postgresql_user}}"
 
 - debug: msg="{{ cmdout.stdout_lines }}"
   when: cmdout is defined
@@ -39,7 +39,7 @@
 - name: pgbackrest check
   command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=info check
   register: cmdout
-  become_user: postgres
+  become_user: "{{postgresql_user}}"
 
 - debug: msg="{{ cmdout.stdout_lines }}"
   when: cmdout is defined

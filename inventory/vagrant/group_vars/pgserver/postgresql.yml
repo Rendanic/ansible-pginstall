@@ -11,6 +11,7 @@ postgresql_packages:
   - postgresql{{postgresql_version}}-server
   - postgresql{{postgresql_version}}-contrib
   - postgresql{{postgresql_version}}-libs
+  - orafce{{postgresql_version}}
   - pgbackrest
   
 postgresql_python_library:

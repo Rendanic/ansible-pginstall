@@ -14,14 +14,8 @@
 
 - name: Install PostgreSQL Community Edition
   hosts: pgserver
+  become: yes
   roles:
     - role: geerlingguy.postgresql
-      become: yes
     - role: pgBackRest
-      become: yes
-
-#- name: Install BARMAN-Server
-#  hosts: barman
-#  roles:
-#    - role: barman
-#      become: yes
+    - role: pgextension
