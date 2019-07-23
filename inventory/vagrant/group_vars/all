@@ -40,6 +40,8 @@ postgresql_global_config_options:
     value: 'pgbackrest --stanza={{pgbackreststanza}} archive-push %p'
   - option: max_wal_senders
     value: 5
+  - option: checkpoint_timeout
+    value: 10min
   - option: wal_level
     value: "replica"
   - option: hot_standby

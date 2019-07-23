@@ -19,7 +19,7 @@
     dest: /etc/pgbackrest.conf
     owner: root
     group: root
-  tags: pgbackrest
+  tags: pgbackrest,pgbackcfg
 
 - name: pgbackrest Logfile directory
   file:
