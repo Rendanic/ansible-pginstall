@@ -53,9 +53,10 @@
   command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=info check
   register: cmdout
   become_user: "{{postgresql_user}}"
+  when: dbcluster_role == 'primary'
 
 - debug: msg="{{ cmdout.stdout_lines }}"
-  when: cmdout is defined
+  when: cmdout is defined and cmdout.stdout_lines is defined
 
 # show only warn/error due to spam in logfile
 - name: initial Full-Backup
@@ -64,8 +65,8 @@
     creates: "/var/log/pgbackrest/db1-backup.log"
   register: cmdout
   become_user: "{{postgresql_user}}"
+  when: dbcluster_role == 'primary'
 
 - name: Show warn/errors from initial Full-Backup
   debug: msg="{{ cmdout.stdout_lines }}"
-  when: cmdout is defined
-
+  when: cmdout is defined and cmdout.stdout_lines is defined

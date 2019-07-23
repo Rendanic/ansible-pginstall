@@ -1,0 +1,49 @@
+- name: get home for posgresql
+  user:
+    name: "{{postgresql_user}}"
+    state: present
+  register: pg_userinfo
+  tags: ssh,pgpass
+
+- name: create .ssh directory for postgresql
+  file:
+    dest: "{{pg_userinfo.home}}/.ssh"
+    state: directory
+    mode: 0700
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
+  tags: ssh
+    
+- name: create ssh-key for postgres
+  openssh_keypair:
+    path: "{{pg_userinfo.home}}/.ssh/id_rsa"
+    size: 2048
+  become_user: "{{postgresql_user}}"
+  when: pg_userinfo is defined
+  tags: ssh
+
+- name: copy public keys to control machine
+  fetch:
+    src:  "{{pg_userinfo.home}}/.ssh/id_rsa.pub"
+    dest: "/tmp/pgsql_id_rsq.pub.{{inventory_hostname}}"
+    flat: yes
+  tags: ssh
+
+- name: distribute public keys to database server
+  authorized_key:
+    user: "{{postgresql_user}}"
+    comment: "{{postgresql_user}}@{{item}}"
+    state: present
+    key: "{{ lookup('file', '/tmp/pgsql_id_rsq.pub.{{item}}') }}"
+  with_inventory_hostnames:
+    - all
+  tags: ssh
+
+- name: create .pgpass
+  template:
+    src: pgpass.j2
+    dest: "{{pg_userinfo.home}}/.pgpass"
+    mode: 0600
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
+  tags: pgpass

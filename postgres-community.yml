@@ -1,9 +1,4 @@
 ---
-- name: Install PostgreSQL Reposiories
-  hosts: pq
-  roles:
-    - role: pgsqlrepo
-
 - name: PostgreSQL Libraries for geerlingguy.postgresql
   hosts: localhost
   tasks:
@@ -13,9 +8,12 @@
       become: yes
 
 - name: Install PostgreSQL Community Edition
-  hosts: pgserver
+  hosts: pq
   become: yes
   roles:
-    - role: geerlingguy.postgresql
-    - role: pgBackRest
-    - role: pgextension
+    - pgsqlrepo
+    - geerlingguy.postgresql
+    - pgcommon
+    - pgextension
+    - pgBackRest
+    - pgstandby

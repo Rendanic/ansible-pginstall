@@ -5,3 +5,4 @@
   become_user: "{{postgresql_user}}"
   with_items:
     - "{{postgresql_extensions}}"
+  when: dbcluster_role == 'primary' and postgresql_extensions is defined

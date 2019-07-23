@@ -1,0 +1,4 @@
+# {{ ansible_managed | comment }}
+{% for client in pgpass %}
+{{ client.host }}:{{ client.port|default('*')}}:{{ client.database|default('*') }}:{{ client.username }}:{{ client.password}}
+{% endfor %}

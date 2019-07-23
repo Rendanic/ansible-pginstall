@@ -1,0 +1,51 @@
+
+# check for exiting recovery.conf
+# existing => do not create a standby Database!
+- name: Check for recovery.conf
+  stat:
+    path: "{{postgresql_data_dir}}/recovery.conf"
+  register: recovery_conf
+  tags: standby,restore
+
+- debug: msg="Standby creation? {{createstandby}}"
+  tags: standby
+
+- name: stop running PostgreSQL Server
+  service:
+    name: "{{postgresql_daemon}}"
+    state: stopped
+  when: createstandby | bool
+  tags: standby
+
+- name: Remove old cluster data
+  file:
+    path: "{{postgresql_data_dir}}"
+    state: directory
+    state: absent
+  become_user: "{{postgresql_user}}"
+  when: createstandby | bool
+  tags: standby
+
+- name: Create datadir for PostgreSQL
+  file:
+    path: "{{postgresql_data_dir}}"
+    state: directory
+    state: directory
+    mode: 0750
+  become_user: "{{postgresql_user}}"
+  when: createstandby | bool
+  tags: standby
+
+- name: Restore database with pgBackRest
+  command: pgbackrest --stanza={{pgbackreststanza}} restore
+
+  become_user: "{{postgresql_user}}"
+  when: createstandby | bool
+  tags: standby,restore
+
+- name: start PostgreSQL Server
+  service:
+    name: "{{postgresql_daemon}}"
+    state: started
+  when: createstandby | bool
+  tags: standby

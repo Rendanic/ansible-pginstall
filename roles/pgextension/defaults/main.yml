@@ -1,0 +1,3 @@
+postgresql_user: postgres
+postgresql_group: postgres
+dbcluster_role: primary

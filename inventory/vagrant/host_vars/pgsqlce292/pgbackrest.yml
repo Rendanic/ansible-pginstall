@@ -1,0 +1,9 @@
+
+pgbackreststanza: "db1"
+#pgbackrestrepo: "/var/lib/pgbackrest"
+pgbackrestrepo: "/net/192.168.56.91/var/lib/pgbackrest"
+
+pgbackrest_recovery_option:
+  - "standby_mode=on"
+  - "primary_conninfo=host=192.168.56.91 user=repuser"
+  - "recovery_target_timeline=latest"

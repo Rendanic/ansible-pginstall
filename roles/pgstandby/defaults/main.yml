@@ -1,0 +1,10 @@
+postgresql_user: postgres
+postgresql_group: postgres
+dbcluster_role: "{{ dbcluster_role | default('primary') }}"
+
+createstandby: "{%- if dbcluster_role in ('hot_standby') and recovery_conf.stat.exists == False -%}
+True
+{%- else -%}
+False
+{%- endif -%}"
+

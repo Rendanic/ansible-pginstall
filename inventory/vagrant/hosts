@@ -1,6 +1,9 @@
-[pgserver]
-localhost
+[pg_primary]
+pgsqlce191 ansible_host=192.168.56.91
 
-# pq => All PostgreSQL Database Servers + BATMAN-Server
+[pg_standby]
+pgsqlce292 ansible_host=192.168.56.92
+
 [pq:children]
-pgserver
+pg_primary
+pg_standby
