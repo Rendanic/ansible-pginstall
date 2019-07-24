@@ -7,3 +7,10 @@ pgbackrest_recovery_option:
   - "primary_conninfo=host={{dbprimaryhost}} user=repuser"
   - "recovery_target_timeline=latest"
   - "archive_cleanup_command=pg_archivecleanup -d {{postgresql_data_dir}} %r"
+
+#pgbackrest_s3:
+#  key:    "security-key"
+#  secret: "secret"
+##  token: "token" # optinal, only for STS
+#  region: "eu-central-1"
+#  bucket: "s3-Bucket"

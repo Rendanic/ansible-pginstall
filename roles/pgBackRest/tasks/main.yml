@@ -11,14 +11,16 @@
     mode: 0644
     owner: root
     group: root
+  no_log: true
   tags: pgbackrest
 
 - name: Template pgbackrest.conf
   template:
     src: pgbackrest.conf.j2
     dest: /etc/pgbackrest.conf
-    owner: root
-    group: root
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
+    mode: 0640
   tags: pgbackrest,pgbackcfg
 
 - name: pgbackrest Logfile directory

@@ -11,6 +11,19 @@ spool-path={{pgbackrestspool | default('{{pgbackrestrepo}}/spool') }}
 
 log-level-console=info
 
+{% if pgbackrest_s3 is defined %}
+repo-type=s3
+repo-s3-key={{pgbackrest_s3.key}}
+repo-s3-key-secret={{pgbackrest_s3.secret}}
+{% if pgbackrest_s3.token is defined %}repo-s3-key-token={{pgbackrest_s3.token}}{% endif %}
+repo-s3-bucket={{pgbackrest_s3.bucket}}
+repo-s3-region={{pgbackrest_s3.region}}
+repo-s3-endpoint={% if pgbackrest_s3.endpoint is defined %}{{pgbackrest_s3.endpoint}}{% else %}s3.{{pgbackrest_s3.region}}.amazonaws.com{% endif %}
+
+# repo1-s3-ca-file is mandatory for CentOS/RHEL7
+repo1-s3-ca-file=/etc/pki/tls/certs/ca-bundle.crt
+{% endif %}
+
 [{{pgbackreststanza}}]
 pg1-path={{postgresql_data_dir}}
 {% if pgbackrest_recovery_option is defined %}
