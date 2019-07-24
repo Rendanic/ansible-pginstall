@@ -1,13 +1,2 @@
-dbcluster_role: primary
-
 postgresql_databases:
   - name: example_db
-
-postgresql_users:
-  - name: admin
-    password: pleaseForg3t
-  - name: repuser
-    password: ForgetMe
-    role_attr_flags: "REPLICATION"
-  - name: check_mk
-    password: monitoring

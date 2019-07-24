@@ -1,3 +1,0 @@
-postgresql_extensions:
-  - name: orafce
-    db: example_db

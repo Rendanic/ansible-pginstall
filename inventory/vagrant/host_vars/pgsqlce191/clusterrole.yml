@@ -1,0 +1,4 @@
+dbcluster_role: primary
+
+# dbprimaryhost is the hostname of the primary when current host is standby'
+dbprimaryhost: 192.168.56.91

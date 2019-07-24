@@ -4,6 +4,6 @@ pgsqlce191 ansible_host=192.168.56.91
 [pg_standby]
 pgsqlce292 ansible_host=192.168.56.92
 
-[pq:children]
+[pgserver:children]
 pg_primary
 pg_standby
