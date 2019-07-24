@@ -1,0 +1,9 @@
+[pg_primary]
+pgsqlce-1
+
+[pg_standby]
+pgsqlce-2
+
+[pgserver:children]
+pg_primary
+pg_standby

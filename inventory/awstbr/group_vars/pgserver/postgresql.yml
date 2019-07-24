@@ -1,0 +1,48 @@
+
+postgresql_version: "11"
+postgresql_bin_path: "/usr/pgsql-{{postgresql_version}}/bin/"
+postgresql_data_dir: "/var/lib/pgsql/{{postgresql_version}}/data"
+postgresql_config_path: "{{postgresql_data_dir}}"
+postgresql_archive_dir: "/var/lib/pgsql/{{postgresql_version}}/archive"
+
+postgresql_packages:
+  - postgresql{{postgresql_version}}-server
+  - postgresql{{postgresql_version}}-contrib
+  - postgresql{{postgresql_version}}-libs
+  - orafce{{postgresql_version}}
+  - pgbackrest
+  
+postgresql_python_library:
+  - python-psycopg2
+
+postgresql_daemon: "postgresql-{{postgresql_version}}"
+
+postgresql_global_config_options:
+  - option: listen_addresses
+    value: '*'
+  - option: ssl
+    value: off
+  - option: archive_mode
+    value: "on"
+  - option: log_line_prefix
+    value: ''
+  - option: archive_command
+    value: 'pgbackrest --stanza={{pgbackreststanza}} archive-push %p'
+  - option: max_wal_senders
+    value: 3
+  - option: wal_level
+    value: "replica"
+
+postgresql_hba_entries:
+  - { type: local, database: all, user: postgres, auth_method: peer }
+  - { type: local, database: all, user: all, auth_method: peer }
+  - { type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5 }
+  - { type: host, database: all, user: all, address: '::1/128', auth_method: md5 }
+  - { type: host, database: all, user: all, address: '0.0.0.0/0', auth_method: md5 }
+  - { type: host, database: replication, user: repuser, address: '172.25.11.0/24', auth_method: md5 }
+
+    pgbackrest_s3:
+      key:    "security-key"
+      secret: "secret"
+      region: "eu-central-1"
+      bucket: "s3-Bucket"

@@ -1,0 +1,9 @@
+pgbackreststanza: "db1"
+pgbackrestrepo: "/pgsqlce"
+pgbackrestspool: "/var/lib/pgbackrest/spool"
+
+pgbackrest_recovery_option:
+  - "standby_mode=on"
+  - "primary_conninfo=host={{dbprimaryhost}} user=repuser"
+  - "recovery_target_timeline=latest"
+  - "archive_cleanup_command=pg_archivecleanup -d {{postgresql_data_dir}} %r"

@@ -1,0 +1,9 @@
+pgpass:
+  - host: pgsqlce-1
+    database: replication
+    username: repuser
+    password: ForgetMe
+  - host: pgsqlce-2
+    database: replication
+    username: repuser
+    password: ForgetMe
