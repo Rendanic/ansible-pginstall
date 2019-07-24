@@ -10,14 +10,6 @@
 - debug: msg="Standby creation? {{createstandby}}"
   tags: standby
 
-- name: Check for existing backup
-  command: pgbackrest --stanza={{pgbackreststanza}} info
-  become_user: "{{postgresql_user}}"
-  register: cmdout
-  failed_when: '" status: ok" not in cmdout.stdout'
-  when: createstandby | bool
-  tags: standby,restore
-
 - name: stop running PostgreSQL Server
   service:
     name: "{{postgresql_daemon}}"
@@ -41,6 +33,14 @@
   become_user: "{{postgresql_user}}"
   when: createstandby | bool
   tags: standby
+
+- name: Check for existing backup
+  command: pgbackrest --stanza={{pgbackreststanza}} info
+  become_user: "{{postgresql_user}}"
+  register: cmdout
+  failed_when: '" status: ok" not in cmdout.stdout'
+  when: createstandby | bool
+  tags: standby,restore
 
 - name: Restore database with pgBackRest
   command: pgbackrest --stanza={{pgbackreststanza}} restore

@@ -45,9 +45,10 @@
     creates: "{{pgbackrestrepo}}/archive"
   register: cmdout
   become_user: "{{postgresql_user}}"
+  when: dbcluster_role == 'primary'
 
 - debug: msg="{{ cmdout.stdout_lines }}"
-  when: cmdout is defined
+  when: cmdout is defined and cmdout.stdout_lines is defined
 
 - name: pgbackrest check
   command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=info check
@@ -58,14 +59,26 @@
 - debug: msg="{{ cmdout.stdout_lines }}"
   when: cmdout is defined and cmdout.stdout_lines is defined
 
+- name: check for an existing backup
+  command: pgbackrest --stanza={{pgbackreststanza}} info
+  become_user: "{{postgresql_user}}"
+  register: backupstate
+  changed_when: '" status: ok" not in backupstate.stdout'
+  when: dbcluster_role == 'primary'
+  tags: test
+
+- debug: msg="Full Backup missing? {{backupstate.changed}}"
+  when: dbcluster_role == 'primary' and backupstate is defined
+  tags: test
+
 # show only warn/error due to spam in logfile
+# --archive-copy => make sure that WAL is existing for later standby restore
 - name: initial Full-Backup
-  command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=warn --type=full backup
-  args:
-    creates: "/var/log/pgbackrest/db1-backup.log"
+  command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=warn --archive-copy --type=full backup
   register: cmdout
   become_user: "{{postgresql_user}}"
-  when: dbcluster_role == 'primary'
+  when: dbcluster_role == 'primary' and backupstate.changed
+  tags: test
 
 - name: Show warn/errors from initial Full-Backup
   debug: msg="{{ cmdout.stdout_lines }}"
