@@ -7,7 +7,7 @@ repo1-retention-full=2
 process-max=2
 archive-async=y
 archive-push-queue-max=100MB
-spool-path={{pgbackrestrepo}}/spool
+spool-path={{pgbackrestspool | default('{{pgbackrestrepo}}/spool') }}
 
 log-level-console=info
 
