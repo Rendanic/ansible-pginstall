@@ -13,11 +13,20 @@
     owner: "{{postgresql_user}}"
     group: "{{postgresql_group}}"
   tags: ssh
-    
+
+# this is only for Ansible >=2.8...    
+#- name: create ssh-key for postgres
+#  openssh_keypair:
+#    path: "{{pg_userinfo.home}}/.ssh/id_rsa"
+#    size: 2048
+#  become_user: "{{postgresql_user}}"
+#  when: pg_userinfo is defined
+#  tags: ssh
+
 - name: create ssh-key for postgres
-  openssh_keypair:
-    path: "{{pg_userinfo.home}}/.ssh/id_rsa"
-    size: 2048
+  shell: ssh-keygen -b 2048 -t rsa -f "{{pg_userinfo.home}}/.ssh/id_rsa" -q -N ""
+  args:
+    creates: "{{pg_userinfo.home}}/.ssh/id_rsa"
   become_user: "{{postgresql_user}}"
   when: pg_userinfo is defined
   tags: ssh
