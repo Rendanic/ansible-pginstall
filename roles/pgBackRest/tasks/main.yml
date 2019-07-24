@@ -23,6 +23,10 @@
     mode: 0640
   tags: pgbackrest,pgbackcfg
 
+- name: chown root pgbackrest spool directory
+  command: chmod 755 "{{pgbackrestspool}}/.."
+  tags: pgbackrest
+
 - name: pgbackrest Logfile directory
   file:
     path: /var/log/pgbackrest
@@ -40,7 +44,17 @@
     group: "{{postgresql_group}}"
     mode: 0750
   tags: pgbackrest
+  when: pgbackrest_s3 is not defined
 
+- name: pgbackrest spool directory
+  file:
+    path: "{{pgbackrestspool}}"
+    state: directory
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
+    mode: 0750
+  tags: pgbackrest
+  when: pgbackrestspool is defined
 - name: pgbackrest stanza-create
   command: pgbackrest --stanza={{pgbackreststanza}} --log-level-console=info stanza-create
   args:
