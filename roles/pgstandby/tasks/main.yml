@@ -20,7 +20,6 @@
 - name: Remove old cluster data
   file:
     path: "{{postgresql_data_dir}}"
-    state: directory
     state: absent
   become_user: "{{postgresql_user}}"
   when: createstandby | bool
@@ -29,7 +28,6 @@
 - name: Create datadir for PostgreSQL
   file:
     path: "{{postgresql_data_dir}}"
-    state: directory
     state: directory
     mode: 0750
   become_user: "{{postgresql_user}}"
