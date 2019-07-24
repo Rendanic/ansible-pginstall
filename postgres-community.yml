@@ -3,9 +3,10 @@
   hosts: localhost
   tasks:
     - package:
-        name: python2-psycopg2.x86_64
+        name: python-psycopg2
         state: present
       become: yes
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Install PostgreSQL Community Edition
   hosts: pgserver

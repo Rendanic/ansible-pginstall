@@ -13,7 +13,7 @@ postgresql_packages:
   - pgbackrest
   
 postgresql_python_library:
-  - python2-psycopg2.x86_64
+  - python-psycopg2
 
 postgresql_daemon: "postgresql-{{postgresql_version}}"
 
