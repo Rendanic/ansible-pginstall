@@ -11,6 +11,8 @@ postgresql_packages:
   - postgresql{{postgresql_version}}-libs
   - orafce{{postgresql_version}}
   - pgbackrest
+  - bash-completion
+  - awscli
   
 postgresql_python_library:
   - python-psycopg2
