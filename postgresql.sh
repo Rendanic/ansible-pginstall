@@ -6,9 +6,14 @@ if [ "$#" -ne 1 ] ; then
     exit 1
 fi
 
-sudo ansible-galaxy -p /etc/ansible/roles install geerlingguy.postgresql
-ansible pgserver -i ${1} -m ping
-if [ "$?" -ne 0 ] ; then
-    exit 1
-fi
-ansible-playbook -i ${1} postgres-community.yml
+inventory="$1"
+
+echo "ansible-galaxy geerlingguy.postgresql"
+ansible-galaxy install geerlingguy.postgresql || exit 1
+
+echo "ansible ping hosts from inventory"
+ansible pgserver -i "${inventory}" -m ping || exit 1
+
+echo "ansible-playbook"
+shift
+ansible-playbook -i "${inventory}" postgres-community.yml "$*"
