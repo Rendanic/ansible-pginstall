@@ -25,15 +25,39 @@ postgresql_global_config_options:
     value: off
   - option: archive_mode
     value: "on"
-  - option: log_line_prefix
-    value: ''
   - option: archive_command
     value: 'pgbackrest --stanza={{pgbackreststanza}} archive-push %p'
+  - option: max_wal_size
+    value: "2GB"
   - option: max_wal_senders
     value: 3
   - option: wal_level
     value: "replica"
-
+  - option: lc_messages
+    value: "C"
+  - option: log_filename
+    value: "postgresql-%Y-%m-%d.log"
+  - option: log_line_prefix
+    value: '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
+  - option: log_checkpoints
+    value: "on"
+  - option: log_autovacuum_min_duration
+    value: 0
+  - option: log_error_verbosity
+    value: "default"
+  - option: log_lock_waits
+    value: "on"
+  - option: log_temp_files
+    value: 0
+  - option: log_disconnections
+    value: "on"
+  - option: log_connections
+    value: "on"
+  - option: log_min_duration_statement
+    value: "10s"
+  - option: log_statement
+    value: "none"
+        
 postgresql_hba_entries:
   - { type: local, database: all, user: postgres, auth_method: peer }
   - { type: local, database: all, user: all, auth_method: peer }
