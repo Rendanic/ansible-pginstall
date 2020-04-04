@@ -1,3 +1,6 @@
 postgresql_user: postgres
 postgresql_group: postgres
 dbcluster_role: primary
+
+# cut last directory from pgbackrestspool
+pgbackrestspool_parent: "{{ pgbackrestspool.split('/')[0:-1] | join('/') }}"
