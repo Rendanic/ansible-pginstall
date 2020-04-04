@@ -11,6 +11,9 @@ postgresql_packages:
   - postgresql{{postgresql_version}}-libs
   - orafce{{postgresql_version}}
   - pgbackrest
+  - pgbadger
+  - pg_repack{{postgresql_version}}
+  - pg_top{{postgresql_version}}
   - bash-completion
   
 postgresql_python_library:
