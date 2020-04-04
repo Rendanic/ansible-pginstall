@@ -60,6 +60,22 @@ postgresql_global_config_options:
     value: "10s"
   - option: log_statement
     value: "none"
+
+  # synchronous_commit
+  - option: synchronous_commit
+    value: "off"
+  # shared_buffers = 25% of RAM
+  - option: shared_buffers
+    value: "{{(ansible_memtotal_mb*25/100) | round() | int }}MB"
+  # effective_cache_size = 50-75% of RAM
+  - option: effective_cache_size
+    value: "{{(ansible_memtotal_mb*75/100) | round() | int }}MB"
+  # work_mem = typically between 4MB and 64MB
+  - option: work_mem
+    value: "16MB"
+  # maintenance_work_mem = 5% of RAM - not more then 512MB
+  - option: maintenance_work_mem
+    value: "{{(ansible_memtotal_mb*5/100) | round() | int }}MB"
         
 postgresql_hba_entries:
   - { type: local, database: all, user: postgres, auth_method: peer }
