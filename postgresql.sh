@@ -15,5 +15,4 @@ echo "ansible ping hosts from inventory"
 ansible pgserver -i "${inventory}" -m ping || exit 1
 
 echo "ansible-playbook"
-shift
-ansible-playbook -i "${inventory}" postgres-community.yml "$*"
+ansible-playbook -i "${inventory}" postgres-community.yml
