@@ -14,6 +14,7 @@ postgresql_packages:
   - pgbadger
   - pg_repack{{postgresql_version}}
   - pg_top{{postgresql_version}}
+  - sysstat
   - bash-completion
   
 postgresql_python_library:
