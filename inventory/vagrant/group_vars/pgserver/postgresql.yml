@@ -29,6 +29,9 @@ postgresql_global_config_options:
     value: off
   - option: archive_mode
     value: "on"
+  # force WAL switch after 3 minutes
+  - option: archive_timeout
+    value: 180
   - option: archive_command
     value: 'pgbackrest --stanza={{pgbackreststanza}} archive-push %p'
   - option: max_wal_size
