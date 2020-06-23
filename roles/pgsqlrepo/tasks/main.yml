@@ -3,3 +3,8 @@
     name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
     state: present
   become: yes
+
+- name: Enable optional_latest for "OracleLinux"
+  command: yum-config-manager --enable ol{{ ansible_distribution_major_version }}_optional_latest
+  when: ansible_distribution == "OracleLinux"
+  tags: yumrepo
