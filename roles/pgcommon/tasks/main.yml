@@ -12,30 +12,33 @@
     mode: 0700
     owner: "{{postgresql_user}}"
     group: "{{postgresql_group}}"
+  when: pgconfigssh|bool
   tags: ssh
 
 # this is only for Ansible >=2.8...    
-#- name: create ssh-key for postgres
-#  openssh_keypair:
-#    path: "{{pg_userinfo.home}}/.ssh/id_rsa"
-#    size: 2048
-#  become_user: "{{postgresql_user}}"
-#  when: pg_userinfo is defined
-#  tags: ssh
-
 - name: create ssh-key for postgres
-  shell: ssh-keygen -b 2048 -t rsa -f "{{pg_userinfo.home}}/.ssh/id_rsa" -q -N ""
-  args:
-    creates: "{{pg_userinfo.home}}/.ssh/id_rsa"
+  openssh_keypair:
+    path: "{{pg_userinfo.home}}/.ssh/id_rsa"
+    size: 2048
   become_user: "{{postgresql_user}}"
-  when: pg_userinfo is defined
+  when: pg_userinfo is defined and pgconfigssh|bool
   tags: ssh
+
+# Task for Ansible < 2.8
+# - name: create ssh-key for postgres
+#   shell: ssh-keygen -b 2048 -t rsa -f "{{pg_userinfo.home}}/.ssh/id_rsa" -q -N ""
+#   args:
+#     creates: "{{pg_userinfo.home}}/.ssh/id_rsa"
+#   become_user: "{{postgresql_user}}"
+#   when: pg_userinfo is defined
+#   tags: ssh
 
 - name: copy public keys to control machine
   fetch:
     src:  "{{pg_userinfo.home}}/.ssh/id_rsa.pub"
     dest: "/tmp/pgsql_id_rsq.pub.{{inventory_hostname}}"
     flat: yes
+  when: pgconfigssh|bool
   tags: ssh
 
 - name: distribute public keys to database server
@@ -46,6 +49,7 @@
     key: "{{ lookup('file', '/tmp/pgsql_id_rsq.pub.{{item}}') }}"
   with_inventory_hostnames:
     - all
+  when: pgconfigssh|bool
   tags: ssh
 
 - name: create .pgpass

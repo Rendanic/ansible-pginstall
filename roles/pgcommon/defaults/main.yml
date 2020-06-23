@@ -1,2 +1,4 @@
 postgresql_user: postgres
 postgresql_group: postgres
+
+pgconfigssh: False
