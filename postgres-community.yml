@@ -9,12 +9,10 @@
       when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Install PostgreSQL Community Edition
-  hosts: pgserver
+  hosts: "{{ hostgroup | default('unknownhost') }}"
   become: yes
   roles:
     - pgsqlrepo
     - geerlingguy.postgresql
     - pgcommon
     - pgextension
-    - pgBackRest
-    - pgstandby
