@@ -59,4 +59,5 @@
     mode: 0600
     owner: "{{postgresql_user}}"
     group: "{{postgresql_group}}"
+  when: pgpass is defined
   tags: pgpass
