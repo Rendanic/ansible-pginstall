@@ -40,6 +40,8 @@ postgresql_global_config_options:
     value: 3
   - option: wal_level
     value: "replica"
+  - option: checkpoint_completion_target
+    value: "0.9"
   - option: lc_messages
     value: "C"
   - option: log_filename
@@ -68,6 +70,10 @@ postgresql_global_config_options:
   # synchronous_commit
   - option: synchronous_commit
     value: "off"
+  # limit used space for temp in filesystem
+  # change it to a value for the environment!
+  - option: temp_file_limit
+    value: "5GB"
   # shared_buffers = 25% of RAM
   - option: shared_buffers
     value: "{{(ansible_memtotal_mb*25/100) | round() | int }}MB"
@@ -79,7 +85,7 @@ postgresql_global_config_options:
     value: "16MB"
   # maintenance_work_mem = 5% of RAM - not more then 512MB
   - option: maintenance_work_mem
-    value: "{{(ansible_memtotal_mb*5/100) | round() | int }}MB"
+    value: "{% if (ansible_memtotal_mb*5/100) | round() | int > 512 %}512MB{% else %}{{(ansible_memtotal_mb*5/100) | round() | int}}MB{% endif %}"
         
 postgresql_hba_entries:
   - { type: local, database: all, user: postgres, auth_method: peer }
