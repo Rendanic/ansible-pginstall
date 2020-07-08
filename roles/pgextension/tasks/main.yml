@@ -1,8 +1,11 @@
 - name: Install Extensions
   postgresql_ext:
-    name: "{{item.name}}"
-    db: "{{item.db}}"
+    name: "{{item.1.name}}"
+    db: "{{item.0.name}}"
   become_user: "{{postgresql_user}}"
-  with_items:
-    - "{{postgresql_extensions}}"
-  when: dbcluster_role == 'primary' and postgresql_extensions is defined
+  with_subelements:
+    - "{{postgresql_databases}}"
+    - "extensions"
+    - {'skip_missing': True}
+  when: dbcluster_role == 'primary' and postgresql_databases is defined
+  tags: pgextension
