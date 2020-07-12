@@ -14,5 +14,6 @@
   roles:
     - pgsqlrepo
     - geerlingguy.postgresql
+    - pg_database_schema
     - pgcommon
     - pgextension

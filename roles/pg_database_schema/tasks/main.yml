@@ -1,0 +1,62 @@
+- name: Revoke ALL from postgres database schema public
+  postgresql_privs:
+    db: postgres
+    login_host: "localhost"
+    login_user: "{{ postgresql_user }}"
+    login_unix_socket: "{{ postgresql_unix_socket_directories[0] }}"
+    privs: ALL
+    type: schema
+    objs: public
+    roles: PUBLIC
+    state: absent
+  become: true
+  become_user: "{{ postgresql_user }}"
+  # See: https://github.com/ansible/ansible/issues/16048#issuecomment-229012509
+  tags: pgschema
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Revoke ALL from custom database schema public
+  postgresql_privs:
+    db: "{{ item.name }}"
+    login_host: "{{ item.login_host | default('localhost') }}"
+    login_password: "{{ item.login_password | default(omit) }}"
+    login_user: "{{ item.login_user | default(postgresql_user) }}"
+    login_unix_socket: "{{ item.login_unix_socket | default(postgresql_unix_socket_directories[0]) }}"
+    port: "{{ item.port | default(omit) }}"
+    privs: ALL
+    type: schema
+    objs: public
+    roles: PUBLIC
+    state: absent
+  with_items: "{{ postgresql_databases }}"
+  become: true
+  become_user: "{{ postgresql_user }}"
+  # See: https://github.com/ansible/ansible/issues/16048#issuecomment-229012509
+  when: postgresql_databases is defined
+  tags: pgschema
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Create custom Schemas in Databases
+  postgresql_schema:
+    database: "{{ item.0.name }}"
+    login_host: "{{ item.0.login_host | default('localhost') }}"
+    login_password: "{{ item.0.login_password | default(omit) }}"
+    login_user: "{{ item.0.login_user | default(postgresql_user) }}"
+    login_unix_socket: "{{ item.0.login_unix_socket | default(postgresql_unix_socket_directories[0]) }}"
+    port: "{{ item.0.port | default(omit) }}"
+    schema: "{{item.1.name}}"
+    owner: "{{ item.1.owner | default (item.0.owner | default (item.0.name))}}"
+    state: present
+  with_subelements: 
+    - "{{ postgresql_databases }}"
+    - schemas
+    - skip_missing: True
+  become: true
+  become_user: "{{ postgresql_user }}"
+  # See: https://github.com/ansible/ansible/issues/16048#issuecomment-229012509
+  when: postgresql_databases is defined and item.1.name is defined
+  tags: pgschema2
+  vars:
+    ansible_ssh_pipelining: true
