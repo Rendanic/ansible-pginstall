@@ -4,7 +4,7 @@
     state: present
   tags: pgbackrest
 
-- name: Template pgbackrest.conf
+- name: Logrotate pgbackrest.conf
   template:
     src: logrotate.conf.j2
     dest: /etc/logrotate.d/pgbackrest.conf
@@ -105,3 +105,20 @@
 - name: Show warn/errors from initial Full-Backup
   debug: msg="{{ cmdout.stdout_lines }}"
   when: cmdout is defined and cmdout.stdout_lines is defined
+
+- name: create cronjob in /etc/cron.d/pgBackRest_ansible
+  cron: 
+    name: pgBackRest_{{item.name}}_ansible
+    cron_file: "{{pgbackrestcronfile}}"
+    user: "{{postgresql_user}}"
+    day: "{{item.day | default('*') }}"
+    weekday: "{{item.weekday | default('*')}}"
+    hour: "{{item.hour | default('04')}}"
+    minute: "{{item.minute | default ('10')}}"
+    job: "/bin/pgbackrest --stanza={{pgbackreststanza}} --type={{item.type | default('incr')}} backup 2>&1 >> {{pgbackrestlogfiledir}}/cron_pgBackRest_{{item.name}}.log"
+  with_items:
+    - "{{pgbackrest_cron}}"
+  when: 
+    - pgbackrest_cron is defined
+  tags:
+    - pgbackrestcron

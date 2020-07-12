@@ -2,7 +2,8 @@
 
 [global]
 repo1-path={{pgbackrestrepo}}
-repo1-retention-full=2
+repo1-retention-full=20
+repo1-retention-full-type=time
 
 process-max=2
 archive-async=y
@@ -27,9 +28,11 @@ repo1-s3-ca-file=/etc/pki/tls/certs/ca-bundle.crt
 [{{pgbackreststanza}}]
 pg1-path={{postgresql_data_dir}}
 {% if pgbackrest_recovery_option is defined %}
-{% for option in pgbackrest_recovery_option %}
+  {%- for option in pgbackrest_recovery_option %}
+    {%- if postgresql_version | int < 12 %}
 recovery-option={{option}}
-{% endfor %}
+    {%- endif %}
+  {%- endfor %}
 {% endif %}
 
 [global:archive-push]

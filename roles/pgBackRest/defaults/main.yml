@@ -1,6 +1,14 @@
 postgresql_user: postgres
 postgresql_group: postgres
 dbcluster_role: primary
+pgbackrestrepo: "/var/lib/pgbackrest"
+pgbackreststanza: "{{ansible_hostname}}"
+pgbackrestcronfile: /etc/cron.d/pgbackrest_ansible
+pgbackrestlogfiledir: /var/log/pgbackrest
+# pgbackrestjobname: 
+
+# use current host as dummy until replication has been configured
+dbprimaryhost: "{{ansible_hostname}}"
 
 # cut last directory from pgbackrestspool
 pgbackrestspool_parent: "{{ pgbackrestspool.split('/')[0:-1] | join('/') }}"

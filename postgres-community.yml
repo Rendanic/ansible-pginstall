@@ -17,3 +17,4 @@
     - pg_database_schema
     - pgcommon
     - pgextension
+    - pgBackRest
