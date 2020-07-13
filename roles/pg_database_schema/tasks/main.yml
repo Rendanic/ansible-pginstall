@@ -1,6 +1,6 @@
-- name: Revoke ALL from postgres database schema public
+- name: Revoke ALL from internal PostgreSQL databases schema public
   postgresql_privs:
-    db: postgres
+    db: "{{item}}"
     login_host: "localhost"
     login_user: "{{ postgresql_user }}"
     login_unix_socket: "{{ postgresql_unix_socket_directories[0] }}"
@@ -12,6 +12,9 @@
   become: true
   become_user: "{{ postgresql_user }}"
   # See: https://github.com/ansible/ansible/issues/16048#issuecomment-229012509
+  with_items:
+    - "postgres"
+    - "template1"
   tags: pgschema
   vars:
     ansible_ssh_pipelining: true
