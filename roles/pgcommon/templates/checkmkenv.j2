@@ -1,0 +1,6 @@
+#
+# {{ ansible_managed | comment }}
+#
+export PGPORT={{ pgcheckmkport | default('5432') }}
+export PGHOME={{ postgresql_bin_path | default("/usr/pgsql-{{postgresql_version}}/bin/") }}
+export PGDATABASE={{ pgcheckmkdb | default('postgres') }}

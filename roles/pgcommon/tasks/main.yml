@@ -61,3 +61,24 @@
     group: "{{postgresql_group}}"
   when: pgpass is defined
   tags: pgpass
+
+# Warning! pgchecmkenv should be placed inside $HOME of postgres owner
+- name: create checkmk .env Configuration for mk_postgres
+  file:
+    path: "{{pgchecmkenv | dirname }}"
+    state: directory
+    mode: 0755
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
+  when: pgchecmkenv is defined
+  tags: cmkenv
+
+- name: create checkmk .env Configuration for mk_postgres
+  template:
+    src:  checkmkenv.j2
+    dest: "{{pgchecmkenv}}"
+    mode: 0640
+    owner: "{{postgresql_user}}"
+    group: "{{postgresql_group}}"
+  when: pgchecmkenv is defined
+  tags: cmkenv

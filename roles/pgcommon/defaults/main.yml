@@ -2,3 +2,6 @@ postgresql_user: postgres
 postgresql_group: postgres
 
 pgconfigssh: False
+
+# pg_5432 is used as a prefix in all Services in checkmk
+pgchecmkenv: /var/lib/pgsql/.checkmk/pg_5432.env
