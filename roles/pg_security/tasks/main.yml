@@ -89,3 +89,29 @@
   tags: pgschema
   vars:
     ansible_ssh_pipelining: true
+
+# privs are part of databases due to login variables...    
+- name: Grant custom priviledges to databases
+  postgresql_privs:
+    db: "{{ item.0.name }}"
+    login_host: "{{ item.login_host | default('localhost') }}"
+    login_password: "{{ item.login_password | default(omit) }}"
+    login_user: "{{ item.login_user | default(postgresql_user) }}"
+    login_unix_socket: "{{ item.login_unix_socket | default(postgresql_unix_socket_directories[0]) }}"
+    port: "{{ item.port | default(omit) }}"
+    privs: "{{ item.1.privs }}"
+    type: "{{ item.1.type }}"
+    objs: "{{ item.1.objs }}"
+    roles: "{{ item.1.roles }}"
+    state: present
+  with_subelements: 
+    - "{{ postgresql_databases }}"
+    - grants
+    - skip_missing: True
+  become: true
+  become_user: "{{ postgresql_user }}"
+  # See: https://github.com/ansible/ansible/issues/16048#issuecomment-229012509
+  when: postgresql_databases is defined and item.1.roles is defined
+  tags: pgrevoke,pggrant2
+  vars:
+    ansible_ssh_pipelining: true
