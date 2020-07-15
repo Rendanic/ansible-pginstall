@@ -102,6 +102,8 @@
     privs: "{{ item.1.privs }}"
     type: "{{ item.1.type }}"
     objs: "{{ item.1.objs }}"
+    schema: "{{ item.1.schema | default(omit) }}"
+    target_roles: "{{ item.1.target_roles | default(omit) }}"
     roles: "{{ item.1.roles }}"
     state: present
   with_subelements: 
