@@ -122,3 +122,12 @@
     - pgbackrest_cron is defined
   tags:
     - pgbackrestcron
+
+- name: Add Stanza to .bash_profile
+  lineinfile:
+    dest: ~/.bash_profile
+    regexp: 'PGBACKREST_STANZA={{pgbackreststanza}} ; export PGBACKREST_STANZA'
+    state: present
+    insertafter: EOF
+    line: 'PGBACKREST_STANZA={{pgbackreststanza}} ; export PGBACKREST_STANZA'
+  tags: bash_profile
